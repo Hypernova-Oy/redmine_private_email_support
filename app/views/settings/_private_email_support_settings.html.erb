@@ -1,0 +1,14 @@
+<%
+
+  private_projects = Project.where(:is_public => false)
+
+%>
+
+<table>
+  <tr>
+    <td>Target private project</td>
+    <td>
+      <%= select_tag "settings[target_private_project]", options_from_collection_for_select(private_projects, :id, :name, :selected => @settings['target_private_project']) %>
+    </td>
+  </tr>
+</table>
