@@ -32,21 +32,21 @@ module MailHandlerPatch
       issue.is_private = true
     end
 
-    relation = IssueRelation.new
-    relation.issue_from = related_issue
-    relation.issue_to = issue
-    relation.init_journals(User.current)
-
-    begin
-      saved = relation.save
-    rescue ActiveRecord::RecordNotUnique
-      saved = false
-      relation.errors.add :base, :taken
-    end
-
     # add To and Cc as watchers before saving so the watchers can reply to Redmine
     add_watchers(issue)
     issue.save!
+    begin
+      relation = IssueRelation.new
+      relation.issue_from = related_issue
+      relation.issue_to = issue
+      relation.init_journals(User.current)
+      saved = relation.save!
+      logger&.info "MailHandlerPatch: created relation between ##{issue.id} and ##{related_issue.id}"
+    rescue ActiveRecord::RecordNotUnique
+      logger&.warn "MailHandlerPatch: could not create relation ##{issue.id} created by #{user}"
+      saved = false
+      relation.errors.add :base, :taken
+    end
     add_attachments(issue)
     logger&.info "MailHandlerPatch: issue ##{issue.id} created by #{user}"
     issue
@@ -62,7 +62,7 @@ module MailHandlerPatch
 
     logger&.info "MailHandlerPatch: rerouting a reply to public issue #{issue}"
     original_issue = issue
-    private_project = Project.find(Setting.plugin_private_email_support["target_private_project"])
+    private_project = target_project
     if private_project.nil?
       raise MissingInformation, 'Target private project is not configured for email handling. Check you plugin settings.'
     end
