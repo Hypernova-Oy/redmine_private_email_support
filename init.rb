@@ -8,6 +8,4 @@ Redmine::Plugin.register :redmine_private_email_support do
   version '0.0.1'
   url 'https://github.com/jseplae/redmine_private_email_support'
   author_url 'https://github.com/jseplae'
-  settings :default => {'target_private_project' => nil},
-           :partial => 'settings/redmine_private_email_support_settings'
 end
