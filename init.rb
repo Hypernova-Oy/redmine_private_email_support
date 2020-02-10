@@ -6,6 +6,6 @@ Redmine::Plugin.register :redmine_private_email_support do
   author 'Juhani Seppälä'
   description 'A Redmine plugin for redirecting issue replies into a private project.'
   version '0.0.1'
-  url 'https://github.com/jseplae/redmine_private_email_support'
+  url 'https://github.com/Hypernova-Oy/redmine_private_email_support'
   author_url 'https://github.com/jseplae'
 end
