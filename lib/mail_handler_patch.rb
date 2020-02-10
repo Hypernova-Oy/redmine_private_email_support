@@ -62,7 +62,7 @@ module MailHandlerPatch
 
     logger&.info "MailHandlerPatch: rerouting a reply to public issue #{issue}"
     original_issue = issue
-    private_project = Project.find(Setting.plugin_private_email_support["target_private_project"])
+    private_project = Project.find(Setting.plugin_redmine_private_email_support["target_private_project"])
     if private_project.nil?
       raise MissingInformation, 'Target private project is not configured for email handling. Check you plugin settings.'
     end
